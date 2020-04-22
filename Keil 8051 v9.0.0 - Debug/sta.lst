@@ -1,0 +1,127 @@
+C51 COMPILER V9.00   STA                                                                   01/27/2020 12:17:35 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE STA
+OBJECT MODULE PLACED IN .\sta.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.exe F:\simplicity_studo_workspace\F31x_Blinky\sta.c OMF2 SMALL DEBUG OBJECTEXTE
+                    -ND ROM(LARGE) WARNINGLEVEL(2) FLOATFUZZY(3) OPTIMIZE(8,SIZE) INTVECTOR(0X0000) INTPROMOTE INCDIR(D:/SiliconLabs/Simplici
+                    -tyStudio/v4/developer/sdks/8051/v4.1.7//Device/shared/si8051Base;D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/
+                    -v4.1.7//Device/C8051F310/inc) PRINT(.\sta.lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\sta.OBJ)
+
+line level    source
+
+   1          /*
+   2           * sta.c
+   3           *
+   4           *  Created on: 2020Äê1ÔÂ27ÈÕ
+   5           *      Author: wrangler
+   6           */
+   7          #include "sta.h"
+   8          
+   9          unsigned char sta_msg[18] = {'$','s','t','a',',','0','0','0','.','0',',','0','.','0','*',0x0d,0x0a};
+  10          unsigned char sta_msg_len = 0;
+  11          
+  12          float temperature = 0.0;
+  13          float bite = 0.0;
+  14          
+  15          unsigned char Float_Format(float var,unsigned char* pBuf)
+  16          {
+  17   1              unsigned int byte;
+  18   1              unsigned char index=0;
+  19   1      
+  20   1              //100/symbol
+  21   1              if(var < 0)
+  22   1              {
+  23   2                      pBuf[index] = '-';
+  24   2                      index++;
+  25   2              }
+  26   1              else
+  27   1              {
+  28   2                      byte = var / 100.0;
+  29   2                      if(byte != 0)
+  30   2                      {
+  31   3                              pBuf[index] = byte + 0x30;
+  32   3                              index++;
+  33   3                      }
+  34   2              }
+  35   1      
+  36   1              //10
+  37   1              var -= (byte * 100);
+  38   1              byte = var / 10.0;
+  39   1              if(byte != 0)
+  40   1              {
+  41   2                      pBuf[index] = byte + 0x30;
+  42   2                      index++;
+  43   2              }
+  44   1      
+  45   1              //1
+  46   1              var -= (byte * 10);
+  47   1              byte = var;
+  48   1              pBuf[index] = byte + 0x30;
+  49   1              index++;
+  50   1      
+  51   1              //.
+  52   1              pBuf[index] = '.';
+  53   1              index++;
+C51 COMPILER V9.00   STA                                                                   01/27/2020 12:17:35 PAGE 2   
+
+  54   1      
+  55   1              //.1
+  56   1              var -= byte;
+  57   1              var *= 10;
+  58   1              byte = var;
+  59   1              pBuf[index] = byte + 0x30;
+  60   1              index++;
+  61   1      
+  62   1              return index;
+  63   1      }
+  64          
+  65          void Teamperature_Convert(unsigned int adc_var)
+  66          {
+  67   1              temperature = adc_var;
+  68   1              temperature /= 1024.0;
+  69   1              temperature *= 3300;
+  70   1              temperature -= 897;
+  71   1              temperature /= 3.35;
+  72   1      }
+  73          
+  74          void Bite_Convert(unsigned int adc_var)
+  75          {
+  76   1      
+  77   1      }
+*** WARNING C280 IN LINE 74 OF F:\SIMPLICITY_STUDO_WORKSPACE\F31X_BLINKY\STA.C: 'adc_var': unreferenced local variable
+  78          
+  79          void State_Msg()
+  80          {
+  81   1              sta_msg_len = 5;
+  82   1              sta_msg_len += Float_Format(temperature,sta_msg+sta_msg_len);
+  83   1              sta_msg[sta_msg_len] = ',';
+  84   1              sta_msg_len++;
+  85   1              sta_msg_len += Float_Format(bite,sta_msg+sta_msg_len);
+  86   1      
+  87   1              sta_msg[sta_msg_len] = '*';
+  88   1              sta_msg_len++;
+  89   1              sta_msg[sta_msg_len] = 0x0d;
+  90   1              sta_msg_len++;
+  91   1      
+  92   1              sta_msg[sta_msg_len] = 0x0a;
+  93   1              sta_msg_len++;
+  94   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    580    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     27      12
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

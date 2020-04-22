@@ -1,0 +1,110 @@
+C51 COMPILER V9.60.0.0   SYS                                                               04/22/2020 23:55:47 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SYS
+OBJECT MODULE PLACED IN .\src\sys.OBJ
+COMPILER INVOKED BY: d:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\keil_8051\9.60\BIN\C51.exe C:\Users\wrangle
+                    -r\SimplicityStudio\v4_workspace\F31x_Blinky_2\src\sys.c OMF2 SMALL DEBUG OBJECTEXTEND ROM(LARGE) WARNINGLEVEL(2) FLOATFU
+                    -ZZY(3) OPTIMIZE(8,SPEED) INTVECTOR(0X0000) INTPROMOTE INCDIR(D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1
+                    -.7//Device/shared/si8051Base;D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.7//Device/C8051F310/inc) PRINT(
+                    -.\src\sys.lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\src\sys.OBJ)
+
+line level    source
+
+   1          /*
+   2           * sys.c
+   3           *
+   4           *  Created on: 2020Äê1ÔÂ23ÈÕ
+   5           *      Author: wrangler
+   6           */
+   7          #include <SI_C8051F310_Register_Enums.h>
+   8          
+   9          unsigned long Sys_Clk = 24500000;
+  10          
+  11          void Port_IO_Init()
+  12          {
+  13   1          // P0.0  -  Skipped,     Open-Drain, Digital
+  14   1          // P0.1  -  Skipped,     Open-Drain, Digital
+  15   1          // P0.2  -  Skipped,     Open-Drain, Digital
+  16   1          // P0.3  -  Skipped,     Open-Drain, Digital
+  17   1          // P0.4  -  TX0 (UART0), Open-Drain, Digital
+  18   1          // P0.5  -  RX0 (UART0), Open-Drain, Digital
+  19   1          // P0.6  -  Skipped,     Open-Drain, Digital
+  20   1          // P0.7  -  Skipped,     Open-Drain, Digital
+  21   1      
+  22   1          // P1.0  -  Skipped,     Open-Drain, Digital
+  23   1          // P1.1  -  Skipped,     Open-Drain, Digital
+  24   1          // P1.2  -  Skipped,     Open-Drain, Digital
+  25   1          // P1.3  -  Skipped,     Open-Drain, Digital
+  26   1          // P1.4  -  Skipped,     Open-Drain, Digital
+  27   1          // P1.5  -  Skipped,     Open-Drain, Digital
+  28   1          // P1.6  -  Skipped,     Open-Drain, Digital
+  29   1          // P1.7  -  Skipped,     Open-Drain, Digital
+  30   1          // P2.0  -  SCK  (SPI0), Open-Drain, Digital
+  31   1          // P2.1  -  MISO (SPI0), Open-Drain, Digital
+  32   1          // P2.2  -  MOSI (SPI0), Open-Drain, Digital
+  33   1          // P2.3  -  NSS  (SPI0), Open-Drain, Digital
+  34   1      
+  35   1      //      P0MDOUT  |= 0x10;      // Enable UTX as push-pull output
+  36   1      //      P2MDOUT  |= 0x0d;      //Enable SCK\MOSI\NSS as push-pull output
+  37   1      //    P3MDIN    = 0xFB;
+  38   1      //    P0SKIP    = 0xCF;
+  39   1      //    P1SKIP    = 0xFF;
+  40   1      //    XBR0      = 0x03;
+  41   1      //    XBR1      = 0x40;
+  42   1      
+  43   1              P0MDOUT   = 0x18;
+  44   1              P1MDOUT   = 0x02;
+  45   1              P2MDOUT   = 0xC0;
+  46   1              P3MDOUT   = 0x10;
+  47   1              XBR1      = 0x40;
+  48   1      }
+  49          
+  50          void Oscillator_Init()
+  51          {
+  52   1              //internal osc enable,SYSCLK derived from internal osc divided by 1
+C51 COMPILER V9.60.0.0   SYS                                                               04/22/2020 23:55:47 PAGE 2   
+
+  53   1          OSCICN    = 0x83;
+  54   1      }
+  55          
+  56          void Interrupts_Init()
+  57          {
+  58   1          IP        = 0x10;
+  59   1          IE        = 0x50;
+  60   1      }
+  61          
+  62          void Init_Device(void)
+  63          {
+  64   1              IE &= ~0x80;
+  65   1      
+  66   1              Port_IO_Init();
+  67   1          Oscillator_Init();
+  68   1      //    Timer_Init();
+  69   1      //    UART_Init();
+  70   1      //    SPI_Init();
+  71   1      //    ADC_Init();
+  72   1      
+  73   1      //    Interrupts_Init();
+  74   1      //
+  75   1      //    IE |= 0x80;
+  76   1      }
+  77          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     36    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,98 @@
+C51 COMPILER V9.00   UART                                                                  01/27/2020 11:35:14 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN .\src\uart.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.exe F:\simplicity_studo_workspace\F31x_Blinky\src\uart.c OMF2 SMALL DEBUG OBJEC
+                    -TEXTEND ROM(LARGE) WARNINGLEVEL(2) FLOATFUZZY(3) OPTIMIZE(8,SIZE) INTVECTOR(0X0000) INTPROMOTE INCDIR(D:/SiliconLabs/Sim
+                    -plicityStudio/v4/developer/sdks/8051/v4.1.7//Device/shared/si8051Base;D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/
+                    -8051/v4.1.7//Device/C8051F310/inc) PRINT(.\src\uart.lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\src\uart.OBJ)
+
+line level    source
+
+   1          /*
+   2           * uart.c
+   3           *
+   4           *  Created on: 2020Äê1ÔÂ22ÈÕ
+   5           *      Author: wrangler
+   6           */
+   7          #include <SI_C8051F310_Register_Enums.h>
+   8          #include "uart.h"
+   9          
+  10          unsigned int Uart_Baud = 9600;
+  11          unsigned char Uart_Recv_buff[5];
+  12          unsigned char Uart_Recv_buff_size = 0;
+  13          
+  14          void UART_Init()
+  15          {
+  16   1              //8-bit Uart Mode
+  17   1              //receive enable
+  18   1          SCON0     = 0x10;
+  19   1      }
+  20          
+  21          SI_INTERRUPT_PROTO(UART0_Interrupt, 4)
+  22          {
+  23   1              if((SCON0 & 0x01) == 0x01)//receive
+  24   1              {
+  25   2      
+  26   2                      Uart_Recv_buff[Uart_Recv_buff_size] = SBUF0;
+  27   2                      Uart_Recv_buff_size++;
+  28   2                      SCON0 &= ~0x01;//clear Recv. INT Flag
+  29   2              }
+  30   1      }
+  31          
+  32          void UART_Send(unsigned char *pBuf,unsigned char len)
+  33          {
+  34   1              unsigned char i=0;
+  35   1              for(;i<len;i++)
+  36   1              {
+  37   2                      SBUF0 = pBuf[i];
+  38   2                      while((SCON0 & 0x02) != 0x02){;}
+  39   2                      SCON0 &= ~0x02;
+  40   2              }
+  41   1      }
+  42          
+  43          unsigned char UART_GetBuff(unsigned char* pBuf,unsigned char len)
+  44          {
+  45   1              unsigned char i=0;
+  46   1              unsigned char temp = Uart_Recv_buff_size;
+  47   1      
+  48   1              if(Uart_Recv_buff_size == 0)
+  49   1                      return 0;
+  50   1      
+  51   1              if(len > temp)
+  52   1                      len = temp;
+  53   1      
+C51 COMPILER V9.00   UART                                                                  01/27/2020 11:35:14 PAGE 2   
+
+  54   1              for(i=0;i<len;i++)
+  55   1                      pBuf[i] = Uart_Recv_buff[i];
+  56   1      
+  57   1              //atom
+  58   1              temp = Uart_Recv_buff_size - len;
+  59   1              Uart_Recv_buff_size = temp;
+  60   1              for(i=0;i<temp;i++)
+  61   1                      Uart_Recv_buff[i] = Uart_Recv_buff[len + i];
+  62   1              //
+  63   1      
+  64   1              return len;
+  65   1      }
+  66          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    147    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

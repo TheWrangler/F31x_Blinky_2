@@ -1,0 +1,205 @@
+C51 COMPILER V9.60.0.0   LMX2592                                                           04/22/2020 23:55:47 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LMX2592
+OBJECT MODULE PLACED IN .\lmx2592.OBJ
+COMPILER INVOKED BY: d:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\keil_8051\9.60\BIN\C51.exe C:\Users\wrangle
+                    -r\SimplicityStudio\v4_workspace\F31x_Blinky_2\lmx2592.c OMF2 SMALL DEBUG OBJECTEXTEND ROM(LARGE) WARNINGLEVEL(2) FLOATFU
+                    -ZZY(3) OPTIMIZE(8,SPEED) INTVECTOR(0X0000) INTPROMOTE INCDIR(D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1
+                    -.7//Device/shared/si8051Base;D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.7//Device/C8051F310/inc) PRINT(
+                    -.\lmx2592.lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\lmx2592.OBJ)
+
+line level    source
+
+   1          /*
+   2           * lmx2592.c
+   3           *
+   4           *  Created on: 2020Äê4ÔÂ22ÈÕ
+   5           *      Author: wrangler
+   6           */
+   7          #include "c8051F310.h"
+   8          
+   9          #define CS_1 (P1 |= 0x02)
+  10          #define CS_0 (P1 &= ~0x02)
+  11          
+  12          #define CLK_1 (P0 |= 0x08)
+  13          #define CLK_0 (P0 &= ~0x08)
+  14          
+  15          #define DAT_1 (P0 |= 0x10)
+  16          #define DAT_0 (P0 &= ~0x10)
+  17          
+  18          #define FREQ (P0 & 0x04)
+  19          
+  20          
+  21          unsigned int lmx2592[34] = {0,0x2206,
+  22                                                                          9,0x0302,
+  23                                                                          10,0x12d8,
+  24                                                                          12,0x7001,
+  25                                                                          11,0x0058,
+  26                                                                          30,0x0035,
+  27                                                                          38,0x0062,//freq=0
+  28                                                                          44,0x0000,
+  29                                                                          45,0x0000,//freq=0
+  30                                                                          40,0x0000,
+  31                                                                          41,0x2710,
+  32                                                                          34,0xc3ca,
+  33                                                                          31,0x0481,
+  34                                                                          36,0x0000,
+  35                                                                          46,0x3fa3,
+  36                                                                          47,0x08c0,
+  37                                                                          0,0x220c};
+  38          
+  39          //unsigned short lmx2592[64] = {0x40,0x0077,0x3f,0x00a8,0x0000,0x0001,0x0000,0x03fc,0x08cf,0x1fa3,
+  40          //                                                              0x0000,0x0000,0x0000,0x0000,0x2710,0x0000,0x8204,0x0062,
+  41          //                                                              0x5000,0x0000,0x001d,0xc3ca,0x2a0a,0x210a,0x0481,0x0035,
+  42          //                                                              0x0084,0x2924,0x0000,0x0509,0x8842,0x2300,      ,0x012c,
+  43          //                                                              0x0965,0x0ffc,0x4000,0x7001,0x0058,0x12d8,0x0302,0x1084,
+  44          //                                                              0x28b2,      ,        ,0x1943,0x0500,0x0808,0x220c}
+  45          
+  46          
+  47          //unsigned short lmx2592_2[32] = {0,0x2306,
+  48          //                                                                      9,0x0302,
+  49          //                                                                      10,0x12d8,
+  50          //                                                                      12,0x7001,
+  51          //                                                                      11,0x0058,
+  52          //                                    30,0x0035,
+C51 COMPILER V9.60.0.0   LMX2592                                                           04/22/2020 23:55:47 PAGE 2   
+
+  53          //                                                                      38,0x001c,//freq=1
+  54          //                                                                      44,0x0000,
+  55          //                                                                      45,0x0c35,//freq=1
+  56          //                                                                      40,0x0000,
+  57          //                                                                      41,0x4e20,
+  58          //                                                                      34,0xc3ca,
+  59          //                                                                      31,0x0481,
+  60          //                                                                      36,0x0000,
+  61          //                                                                      47,0x08c0,
+  62          //                                                                      0,0x230e};
+  63          
+  64          unsigned char freq = 0xff;
+  65          
+  66          void lmx2592_Reset()
+  67          {
+  68   1              CS_1;
+  69   1              CLK_1;
+  70   1              DAT_1;
+  71   1      }
+  72          
+  73          void lmx2592_WriteReg(unsigned char addr,unsigned int reg)
+  74          {
+  75   1              unsigned char i;
+  76   1              unsigned long var;
+  77   1      
+  78   1              var = addr;
+  79   1              var = (var << 16);
+  80   1              var |= reg;
+  81   1      
+  82   1              CS_0;
+  83   1              for(i=0;i<24;i++)
+  84   1              {
+  85   2                      if((var & 0x800000) == 0x800000)
+  86   2                              DAT_1;
+  87   2                      else DAT_0;
+  88   2                      CLK_0;
+  89   2                      CLK_1;
+  90   2      
+  91   2                      var = (var << 1);
+  92   2              }
+  93   1              CS_1;
+  94   1      }
+  95          
+  96          void lmx2592_Config()
+  97          {
+  98   1              unsigned char i;
+  99   1      
+ 100   1              if(freq == FREQ)
+ 101   1                      return;
+ 102   1      
+ 103   1              freq = FREQ;
+ 104   1      
+ 105   1              if(freq == 0)
+ 106   1              {
+ 107   2                      lmx2592[13] = 0x0062;
+ 108   2                      lmx2592[17] = 0x0000;
+ 109   2              }
+ 110   1              else
+ 111   1              {
+ 112   2                      lmx2592[13] = 0x0070;
+ 113   2                      lmx2592[17] = 0x0c35;
+ 114   2              }
+ 115   1      
+C51 COMPILER V9.60.0.0   LMX2592                                                           04/22/2020 23:55:47 PAGE 3   
+
+ 116   1              for(i=0;i<17;i++)
+ 117   1              {
+ 118   2                      lmx2592_WriteReg(lmx2592[2*i],lmx2592[2*i+1]);
+ 119   2              }
+ 120   1      
+ 121   1              /*
+ 122   1              lmx2592_WriteReg(0x40,0x0077);
+ 123   1              lmx2592_WriteReg(0x3f,0x00a8);
+ 124   1              lmx2592_WriteReg(0x3e,0x0000);
+ 125   1              lmx2592_WriteReg(0x3d,0x0001);
+ 126   1              lmx2592_WriteReg(0x3b,0x0000);
+ 127   1              lmx2592_WriteReg(0x30,0x03fc);
+ 128   1              lmx2592_WriteReg(0x2f,0x08cf);
+ 129   1              lmx2592_WriteReg(0x2e,0x1fa3);
+ 130   1              lmx2592_WriteReg(0x2d,0x0000);
+ 131   1              lmx2592_WriteReg(0x2c,0x0000);
+ 132   1              lmx2592_WriteReg(0x2b,0x0000);
+ 133   1              lmx2592_WriteReg(0x2a,0x0000);
+ 134   1              lmx2592_WriteReg(0x29,0x2710);
+ 135   1              lmx2592_WriteReg(0x28,0x0000);
+ 136   1              lmx2592_WriteReg(0x27,0x8204);
+ 137   1              lmx2592_WriteReg(0x26,0x0062);
+ 138   1              lmx2592_WriteReg(0x25,0x5000);
+ 139   1              lmx2592_WriteReg(0x24,0x0000);
+ 140   1              lmx2592_WriteReg(0x23,0x001d);
+ 141   1              lmx2592_WriteReg(0x22,0xc3ca);
+ 142   1              lmx2592_WriteReg(0x21,0x2a0a);
+ 143   1              lmx2592_WriteReg(0x20,0x210a);
+ 144   1              lmx2592_WriteReg(0x1f,0x0481);
+ 145   1              lmx2592_WriteReg(0x1e,0x0035);
+ 146   1              lmx2592_WriteReg(0x1d,0x0084);
+ 147   1              lmx2592_WriteReg(0x1c,0x2924);
+ 148   1              lmx2592_WriteReg(0x19,0x0000);
+ 149   1              lmx2592_WriteReg(0x18,0x0509);
+ 150   1              lmx2592_WriteReg(0x17,0x8842);
+ 151   1              lmx2592_WriteReg(0x16,0x2300);
+ 152   1              lmx2592_WriteReg(0x14,0x012c);
+ 153   1              lmx2592_WriteReg(0x13,0x0965);
+ 154   1              lmx2592_WriteReg(0x0e,0x0ffc);
+ 155   1              lmx2592_WriteReg(0x0d,0x4000);
+ 156   1              lmx2592_WriteReg(0x0c,0x7001);
+ 157   1              lmx2592_WriteReg(0x0b,0x0058);
+ 158   1              lmx2592_WriteReg(0x0a,0x12d8);
+ 159   1              lmx2592_WriteReg(0x09,0x0302);
+ 160   1              lmx2592_WriteReg(0x08,0x1084);
+ 161   1              lmx2592_WriteReg(0x07,0x28b2);
+ 162   1              lmx2592_WriteReg(0x04,0x1943);
+ 163   1              lmx2592_WriteReg(0x02,0x0500);
+ 164   1              lmx2592_WriteReg(0x01,0x0808);
+ 165   1              lmx2592_WriteReg(0x00,0x220c);*/
+ 166   1      }
+ 167          
+ 168          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    230    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     69       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V9.60.0.0   LMX2592                                                           04/22/2020 23:55:47 PAGE 4   
+
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

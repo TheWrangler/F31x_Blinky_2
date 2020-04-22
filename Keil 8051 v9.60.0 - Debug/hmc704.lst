@@ -1,0 +1,100 @@
+C51 COMPILER V9.60.0.0   HMC704                                                            04/22/2020 23:55:47 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE HMC704
+OBJECT MODULE PLACED IN .\hmc704.OBJ
+COMPILER INVOKED BY: d:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\keil_8051\9.60\BIN\C51.exe C:\Users\wrangle
+                    -r\SimplicityStudio\v4_workspace\F31x_Blinky_2\hmc704.c OMF2 SMALL DEBUG OBJECTEXTEND ROM(LARGE) WARNINGLEVEL(2) FLOATFUZ
+                    -ZY(3) OPTIMIZE(8,SPEED) INTVECTOR(0X0000) INTPROMOTE INCDIR(D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.
+                    -7//Device/shared/si8051Base;D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.7//Device/C8051F310/inc) PRINT(.
+                    -\hmc704.lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\hmc704.OBJ)
+
+line level    source
+
+   1          /*
+   2           * hmc704.c
+   3           *
+   4           *  Created on: 2020Äê4ÔÂ22ÈÕ
+   5           *      Author: wrangler
+   6           */
+   7          
+   8          
+   9          #include "c8051F310.h"
+  10          
+  11          #define CS_1 (P2 |= 0x40)
+  12          #define CS_0 (P2 &= ~0x40)
+  13          
+  14          #define CLK_1 (P3 |= 0x10)
+  15          #define CLK_0 (P3 &= ~0x10)
+  16          
+  17          #define DAT_1 (P2 |= 0x80)
+  18          #define DAT_0 (P2 &= ~0x80)
+  19          
+  20          
+  21          unsigned int hmc704[8] = {0x0,0x000020,
+  22                                                                  0x2,0x000004,
+  23                                                                  0x3,0x0000b5,
+  24                                                                  0x4,0x000000};
+  25          
+  26          
+  27          void hmc704_Reset()
+  28          {
+  29   1              CS_0;
+  30   1              CLK_1;
+  31   1              DAT_1;
+  32   1      }
+  33          
+  34          void hmc704_WriteReg(unsigned char addr,unsigned int reg)
+  35          {
+  36   1              unsigned char i;
+  37   1              unsigned long var;
+  38   1      
+  39   1              var = addr;
+  40   1              var = (var << 24);
+  41   1              var |= reg;
+  42   1      
+  43   1              CS_1;
+  44   1              for(i=0;i<31;i++)
+  45   1              {
+  46   2                      if((var & 0x40000000) == 0x40000000)
+  47   2                              DAT_1;
+  48   2                      else DAT_0;
+  49   2                      CLK_0;
+  50   2                      CLK_1;
+  51   2      
+  52   2                      var = (var << 1);
+C51 COMPILER V9.60.0.0   HMC704                                                            04/22/2020 23:55:47 PAGE 2   
+
+  53   2              }
+  54   1              CLK_0;
+  55   1              CLK_1;
+  56   1              CS_0;
+  57   1      }
+  58          
+  59          void hmc704_Config()
+  60          {
+  61   1              unsigned char i;
+  62   1      
+  63   1              for(i=0;i<4;i++)
+  64   1              {
+  65   2                      hmc704_WriteReg(hmc704[2*i],hmc704[2*i+1]);
+  66   2              }
+  67   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    197    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     16       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

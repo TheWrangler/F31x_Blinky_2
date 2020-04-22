@@ -1,0 +1,247 @@
+C51 COMPILER V9.00   CMD                                                                   01/27/2020 12:17:35 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE CMD
+OBJECT MODULE PLACED IN .\cmd.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.exe F:\simplicity_studo_workspace\F31x_Blinky\cmd.c OMF2 SMALL DEBUG OBJECTEXTE
+                    -ND ROM(LARGE) WARNINGLEVEL(2) FLOATFUZZY(3) OPTIMIZE(8,SIZE) INTVECTOR(0X0000) INTPROMOTE INCDIR(D:/SiliconLabs/Simplici
+                    -tyStudio/v4/developer/sdks/8051/v4.1.7//Device/shared/si8051Base;D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/
+                    -v4.1.7//Device/C8051F310/inc) PRINT(.\cmd.lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\cmd.OBJ)
+
+line level    source
+
+   1          /*
+   2           * cmd.c
+   3           *
+   4           *  Created on: 2020年1月27日
+   5           *      Author: wrangler
+   6           */
+   7          #include "cmd.h"
+   8          
+   9          //cmd format
+  10          //0-1 eb 90
+  11          //2-5 ftw_lower_1
+  12          //6-9 ftw_upper_1
+  13          //10-13 ftw_lower_2
+  14          //14-17 ftw_upper_2
+  15          //18-21 step
+  16          //22-23 rate
+  17          //24-27 re-sweep period
+  18          //
+  19          
+  20          //idata unsigned char cmd_msg[40] = {0xeb,0x90};
+  21          //unsigned char cmd_msg_len;
+  22          //
+  23          //unsigned char Uart_buff[15];
+  24          //unsigned char Uart_buff_size = 0;
+  25          //
+  26          //float step_scale = 4294967296.0 / 3400.0;//2^32/fs
+  27          //float clock_scale = 24.0 / 3400.0;  //us
+  28          
+  29          //求最大公约数
+  30          unsigned long gcd(unsigned long x, unsigned long y)
+  31          {
+  32   1              unsigned long gcdNum = 1;
+  33   1              while (x != y)
+  34   1              {
+  35   2                      if (x % 2 == 0 && y % 2 == 0)
+  36   2                      {
+  37   3                              x /= 2;
+  38   3                              y /= 2;
+  39   3                              gcdNum *= 2;
+  40   3                      }
+  41   2                      else
+  42   2                      {
+  43   3                              if (x > y)
+  44   3                                      x -= y;
+  45   3                              else
+  46   3                                      y -= x;
+  47   3                      }
+  48   2              }
+  49   1              return gcdNum * x;
+  50   1      }
+  51          
+  52          unsigned long String2Long(unsigned char* buf,unsigned char dec)
+  53          {
+C51 COMPILER V9.00   CMD                                                                   01/27/2020 12:17:35 PAGE 2   
+
+  54   1              unsigned char i;
+  55   1              unsigned long res=0,var,temp = 1;
+  56   1              for(i=0;i<dec;i++)
+  57   1              {
+  58   2                      var = buf[dec - i - 1];
+  59   2                      var *= temp;
+  60   2                      res += var;
+  61   2      
+  62   2                      temp *= 10;
+  63   2              }
+  64   1      
+  65   1              return res;
+  66   1      }
+  67          
+  68          unsigned char Frame2CmdConvert()
+  69          {
+  70   1              return 0;
+  71   1      //      unsigned char i;
+  72   1      //      unsigned long var;
+  73   1      //
+  74   1      //      i = UART_GetBuff(Uart_buff + Uart_buff_size,20-Uart_buff_size);
+  75   1      //      Uart_buff_size += i;
+  76   1      //
+  77   1      //      if(Uart_buff_size >= 3)
+  78   1      //      {
+  79   1      //              if((Uart_buff[0] == '#')
+  80   1      //                              && (Uart_buff[1] == 'K')
+  81   1      //                              && (Uart_buff[2] == 'R'))
+  82   1      //              {
+  83   1      //
+  84   1      //                      var = String2Long(Uart_buff+4,6);
+  85   1      //                      var /= 32768;
+  86   1      //                      var /= 4;
+  87   1      //            var *= step_scale;
+  88   1      //            cmd_msg[17] = ((var & 0xff000000) >> 24);
+  89   1      //            cmd_msg[18] = ((var & 0xff0000) >> 16);
+  90   1      //            cmd_msg[19] = ((var & 0xff00) >> 8);
+  91   1      //            cmd_msg[20] = var;
+  92   1      //                      return 0;
+  93   1      //              }
+  94   1      //              else if((Uart_buff[0] == '#')
+  95   1      //                              && (Uart_buff[1] == 'P')
+  96   1      //                              && (Uart_buff[2] == 'W'))
+  97   1      //              {
+  98   1      //                      var = String2Long(Uart_buff+4,7);
+  99   1      //                      var /= clock_scale;
+ 100   1      //                      cmd_msg[21] = ((var & 0xff00) >> 8);
+ 101   1      //                      cmd_msg[22] = var;
+ 102   1      //                      return 0;
+ 103   1      //              }
+ 104   1      //              else if((Uart_buff[0] == '#')
+ 105   1      //                              && (Uart_buff[1] == 'G')
+ 106   1      //                              && (Uart_buff[2] == 'N'))
+ 107   1      //              {
+ 108   1      //
+ 109   1      //              }
+ 110   1      //              else if((Uart_buff[0] == '#')
+ 111   1      //                              && (Uart_buff[1] == 'R')
+ 112   1      //                              && (Uart_buff[2] == 'F'))
+ 113   1      //              {
+ 114   1      //
+ 115   1      //              }
+ 116   1      //              else if((Uart_buff[0] == '#')
+C51 COMPILER V9.00   CMD                                                                   01/27/2020 12:17:35 PAGE 3   
+
+ 117   1      //                              && (Uart_buff[1] == 'C')
+ 118   1      //                              && (Uart_buff[2] == 'T'))
+ 119   1      //              {
+ 120   1      //
+ 121   1      //              }
+ 122   1      //              else
+ 123   1      //              {
+ 124   1      //                      for(i=0;i<Uart_buff_size-1;i++)
+ 125   1      //                              Uart_buff[i] = Uart_buff[i+1];
+ 126   1      //              }
+ 127   1      //      }
+ 128   1      //      else if(Uart_buff_size >= 4)
+ 129   1      //      {
+ 130   1      //              if((Uart_buff[0] == '#')
+ 131   1      //                              && (Uart_buff[1] == 'F')
+ 132   1      //                              && (Uart_buff[2] == 'R')
+ 133   1      //                              && (Uart_buff[3] == 'Q'))
+ 134   1      //              {
+ 135   1      //
+ 136   1      //              }
+ 137   1      //              else if((Uart_buff[0] == '#')
+ 138   1      //                              && (Uart_buff[1] == 'P')
+ 139   1      //                              && (Uart_buff[2] == 'R')
+ 140   1      //                              && (Uart_buff[3] == 'T'))
+ 141   1      //              {
+ 142   1      //                      var = String2Long(Uart_buff+4,7);
+ 143   1      //                      var /= clock_scale;
+ 144   1      //                      cmd_msg[23] = ((var & 0xff000000) >> 24);
+ 145   1      //                      cmd_msg[24] = ((var & 0xff0000) >> 16);
+ 146   1      //                      cmd_msg[25] = ((var & 0xff00) >> 8);
+ 147   1      //                      cmd_msg[26] = var;
+ 148   1      //                      return 0;
+ 149   1      //
+ 150   1      //              }
+ 151   1      //              else if((Uart_buff[0] == '#')
+ 152   1      //                              && (Uart_buff[1] == 'M')
+ 153   1      //                              && (Uart_buff[2] == 'O')
+ 154   1      //                              && (Uart_buff[3] == 'D'))
+ 155   1      //              {
+ 156   1      //
+ 157   1      //              }
+ 158   1      //              else if((Uart_buff[0] == '#')
+ 159   1      //                              && (Uart_buff[1] == 'A')
+ 160   1      //                              && (Uart_buff[2] == 'T')
+ 161   1      //                              && (Uart_buff[3] == 'T'))
+ 162   1      //              {
+ 163   1      //
+ 164   1      //              }
+ 165   1      //              else if((Uart_buff[0] == '#')
+ 166   1      //                              && (Uart_buff[1] == 'A')
+ 167   1      //                              && (Uart_buff[2] == 'A')
+ 168   1      //                              && (Uart_buff[3] == 'A'))
+ 169   1      //              {
+ 170   1      //
+ 171   1      //              }
+ 172   1      //              else if((Uart_buff[0] == '#')
+ 173   1      //                              && (Uart_buff[1] == 'P')
+ 174   1      //                              && (Uart_buff[2] == 'S')
+ 175   1      //                              && (Uart_buff[3] == 'A'))
+ 176   1      //              {
+ 177   1      //
+ 178   1      //              }
+ 179   1      //              else if((Uart_buff[0] == '#')
+C51 COMPILER V9.00   CMD                                                                   01/27/2020 12:17:35 PAGE 4   
+
+ 180   1      //                              && (Uart_buff[1] == 'A')
+ 181   1      //                              && (Uart_buff[2] == 'A')
+ 182   1      //                              && (Uart_buff[3] == 'B'))
+ 183   1      //              {
+ 184   1      //
+ 185   1      //              }
+ 186   1      //              else if((Uart_buff[0] == '#')
+ 187   1      //                              && (Uart_buff[1] == 'P')
+ 188   1      //                              && (Uart_buff[2] == 'S')
+ 189   1      //                              && (Uart_buff[3] == 'B'))
+ 190   1      //              {
+ 191   1      //
+ 192   1      //              }
+ 193   1      //              else if((Uart_buff[0] == '#')
+ 194   1      //                              && (Uart_buff[1] == 'A')
+ 195   1      //                              && (Uart_buff[2] == 'A')
+ 196   1      //                              && (Uart_buff[3] == 'C'))
+ 197   1      //              {
+ 198   1      //
+ 199   1      //              }
+ 200   1      //              else if((Uart_buff[0] == '#')
+ 201   1      //                              && (Uart_buff[1] == 'P')
+ 202   1      //                              && (Uart_buff[2] == 'S')
+ 203   1      //                              && (Uart_buff[3] == 'C'))
+ 204   1      //              {
+ 205   1      //                      return 1;
+ 206   1      //              }
+ 207   1      //      }
+ 208   1      }
+ 209          
+ 210          
+ 211          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    422    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      29
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

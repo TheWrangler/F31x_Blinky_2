@@ -1,0 +1,101 @@
+C51 COMPILER V9.60.0.0   SPI                                                               03/19/2020 17:00:44 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SPI
+OBJECT MODULE PLACED IN .\src\spi.OBJ
+COMPILER INVOKED BY: d:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\keil_8051\9.60\BIN\C51.exe F:\simplicity_st
+                    -udo_workspace\F31x_Blinky\src\spi.c OMF2 SMALL DEBUG OBJECTEXTEND ROM(LARGE) WARNINGLEVEL(2) FLOATFUZZY(3) OPTIMIZE(8,SP
+                    -EED) INTVECTOR(0X0000) INTPROMOTE INCDIR(D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.7//Device/shared/si
+                    -8051Base;D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.7//Device/C8051F310/inc) PRINT(.\src\spi.lst) COND 
+                    -PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\src\spi.OBJ)
+
+line level    source
+
+   1          /*
+   2           * spi.c
+   3           *
+   4           *  Created on: 2020Äê1ÔÂ22ÈÕ
+   5           *      Author: wrangler
+   6           */
+   7          #include <SI_C8051F310_Register_Enums.h>
+   8          #include "spi.h"
+   9          
+  10          extern unsigned long Sys_Clk;
+  11          
+  12          extern idata unsigned char cmd_msg[42];
+  13          unsigned char sta_cmd_send_count = 0;
+  14          unsigned char sta_cmd_send_complete = 1;
+  15          
+  16          unsigned char SPI_GetClockRate()
+  17          {
+  18   1              //F_SCK = F_SYSCLK / 2 / (SPI0CKR + 1)
+  19   1              unsigned long count = Sys_Clk / 2;
+  20   1              count = count / 2500000;//SCK = 2.5Mbps
+  21   1              count = count - 1;
+  22   1              return count & 0xff;
+  23   1      }
+  24          
+  25          void SPI_Init()
+  26          {
+  27   1              //rising edge output data,falling edge acquire data
+  28   1      
+  29   1              //enable master mode,SCK=0 when idle
+  30   1          SPI0CFG   |= 0x40;
+  31   1          //3-wire Single-Master Mode
+  32   1          SPI0CN    = 0x01;
+  33   1          //SCK = 2.5Mbps
+  34   1          SPI0CKR = SPI_GetClockRate();
+  35   1      }
+  36          
+  37          SI_INTERRUPT(SPI0_Interrupt, 6)
+  38          {
+  39   1              if(SPI0CN & 0x80 == 0x80)
+  40   1              {
+  41   2                      SPI0CN &= ~0x80;
+  42   2      
+  43   2                      if(sta_cmd_send_count == 42)
+  44   2                      {
+  45   3                              sta_cmd_send_complete = 1;
+  46   3                              return;
+  47   3                      }
+  48   2      
+  49   2                      SPI0DAT = cmd_msg[sta_cmd_send_count];
+  50   2                      sta_cmd_send_count++;
+  51   2              }
+  52   1      
+C51 COMPILER V9.60.0.0   SPI                                                               03/19/2020 17:00:44 PAGE 2   
+
+  53   1              SPI0CN &= ~0x70;
+  54   1      }
+  55          
+  56          void SPI_Send(/*unsigned char* pBuf,unsigned char len*/)
+  57          {
+  58   1              sta_cmd_send_count = 0;
+  59   1              sta_cmd_send_complete = 0;
+  60   1              SPI0CN |= 0x80;
+  61   1      
+  62   1      //      unsigned char i;
+  63   1      //      for(i=0;i<len;i++)
+  64   1      //      {
+  65   1      //              while(SPI0CN & 0x02 != 0x02){;}
+  66   1      //              SPI0DAT = pBuf[i];
+  67   1      //      }
+  68   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    144    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

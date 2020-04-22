@@ -1,0 +1,66 @@
+C51 COMPILER V9.00   SPI                                                                   01/27/2020 11:35:14 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE SPI
+OBJECT MODULE PLACED IN .\src\spi.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.exe F:\simplicity_studo_workspace\F31x_Blinky\src\spi.c OMF2 SMALL DEBUG OBJECT
+                    -EXTEND ROM(LARGE) WARNINGLEVEL(2) FLOATFUZZY(3) OPTIMIZE(8,SIZE) INTVECTOR(0X0000) INTPROMOTE INCDIR(D:/SiliconLabs/Simp
+                    -licityStudio/v4/developer/sdks/8051/v4.1.7//Device/shared/si8051Base;D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8
+                    -051/v4.1.7//Device/C8051F310/inc) PRINT(.\src\spi.lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\src\spi.OBJ)
+
+line level    source
+
+   1          /*
+   2           * spi.c
+   3           *
+   4           *  Created on: 2020Äê1ÔÂ22ÈÕ
+   5           *      Author: wrangler
+   6           */
+   7          #include <SI_C8051F310_Register_Enums.h>
+   8          #include "spi.h"
+   9          
+  10          extern unsigned long Sys_Clk;
+  11          
+  12          unsigned char SPI_GetClockRate()
+  13          {
+  14   1              //F_SCK = F_SYSCLK / 2 / (SPI0CKR + 1)
+  15   1              unsigned int count = Sys_Clk / 2;
+  16   1              count = count / 2500000;//SCK = 2.5Mbps
+  17   1              count = count - 1;
+  18   1              return count & 0xff;
+  19   1      }
+  20          
+  21          void SPI_Init()
+  22          {
+  23   1              //enable master mode,SCK=1 when idle
+  24   1          SPI0CFG   = 0x50;
+  25   1          //4-wire Single-Master Mode,NSS as cs and 1 when idle
+  26   1          SPI0CN    = 0x0D;
+  27   1          //SCK = 2.5Mbps
+  28   1          SPI0CKR = SPI_GetClockRate();
+  29   1      }
+  30          
+  31          void SPI_Send(unsigned char* pBuf,unsigned char len)
+  32          {
+  33   1      
+  34   1      }
+*** WARNING C280 IN LINE 31 OF F:\SIMPLICITY_STUDO_WORKSPACE\F31X_BLINKY\SRC\SPI.C: 'pBuf': unreferenced local variable
+*** WARNING C280 IN LINE 31 OF F:\SIMPLICITY_STUDO_WORKSPACE\F31X_BLINKY\SRC\SPI.C: 'len': unreferenced local variable
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     54    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)

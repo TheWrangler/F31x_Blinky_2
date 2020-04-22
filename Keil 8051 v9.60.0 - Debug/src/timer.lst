@@ -1,0 +1,67 @@
+C51 COMPILER V9.60.0.0   TIMER                                                             03/19/2020 17:00:45 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE TIMER
+OBJECT MODULE PLACED IN .\src\timer.OBJ
+COMPILER INVOKED BY: d:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\keil_8051\9.60\BIN\C51.exe F:\simplicity_st
+                    -udo_workspace\F31x_Blinky\src\timer.c OMF2 SMALL DEBUG OBJECTEXTEND ROM(LARGE) WARNINGLEVEL(2) FLOATFUZZY(3) OPTIMIZE(8,
+                    -SPEED) INTVECTOR(0X0000) INTPROMOTE INCDIR(D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.7//Device/shared/
+                    -si8051Base;D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.7//Device/C8051F310/inc) PRINT(.\src\timer.lst) C
+                    -OND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\src\timer.OBJ)
+
+line level    source
+
+   1          /*
+   2           * timer.c
+   3           *
+   4           *  Created on: 2020Äê1ÔÂ22ÈÕ
+   5           *      Author: wrangler
+   6           */
+   7          #include <SI_C8051F310_Register_Enums.h>
+   8          #include "timer.h"
+   9          
+  10          extern unsigned long Sys_Clk;
+  11          extern unsigned int Uart_Baud;
+  12          
+  13          unsigned char Timer_GetUartCounter()
+  14          {
+  15   1              //baud = T1_CLK_SRC / (256 - T1H) / 2
+  16   1              unsigned long count;
+  17   1              count = Sys_Clk / 12;
+  18   1              count = count / 2;
+  19   1              count = count / Uart_Baud;
+  20   1              count = 256 - count;
+  21   1              return count & 0xff;
+  22   1      }
+  23          
+  24          void Timer_Init()
+  25          {
+  26   1          //Mode2:8-bit with auto-reload
+  27   1          TMOD = 0x20;
+  28   1          //sysclk/12 as source clock,
+  29   1          CKCON &= ~0x03;
+  30   1          TH1 = Timer_GetUartCounter();
+  31   1          //enable timer1
+  32   1          TCON = 0x40;
+  33   1      }
+  34          
+  35          
+  36          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    113    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
