@@ -1,4 +1,4 @@
-AX51 MACRO ASSEMBLER  SILABS_STARTUP                                                        04/22/20 23:55:46 PAGE     1
+AX51 MACRO ASSEMBLER  SILABS_STARTUP                                                        04/27/20 20:53:10 PAGE     1
 
 
 MACRO ASSEMBLER AX51 V3.15.3.0
@@ -62,7 +62,7 @@ LOC    OBJ             LINE     SOURCE
                          48     ;</h>
                          49     ;------------------------------------------------------------------------------
                          50     ;
-AX51 MACRO ASSEMBLER  SILABS_STARTUP                                                        04/22/20 23:55:46 PAGE     2
+AX51 MACRO ASSEMBLER  SILABS_STARTUP                                                        04/27/20 20:53:10 PAGE     2
 
                          51     ;<h> Reentrant Stack Initialization
                          52     ;
@@ -127,7 +127,7 @@ LOC    OBJ             LINE     SOURCE
  0083                   111     DPH     DATA    83H
                         112     
                         113                     NAME    ?C_STARTUP
-AX51 MACRO ASSEMBLER  SILABS_STARTUP                                                        04/22/20 23:55:46 PAGE     3
+AX51 MACRO ASSEMBLER  SILABS_STARTUP                                                        04/27/20 20:53:10 PAGE     3
 
                         114     
                         115     
@@ -192,7 +192,7 @@ LOC    OBJ             LINE     SOURCE
                                 
                                                 MOV     ?C_IBP,#LOW IBPSTACKTOP
                                 ENDIF
-AX51 MACRO ASSEMBLER  SILABS_STARTUP                                                        04/22/20 23:55:46 PAGE     4
+AX51 MACRO ASSEMBLER  SILABS_STARTUP                                                        04/27/20 20:53:10 PAGE     4
 
                         177     
                         178     IF XBPSTACK <> 0
@@ -222,7 +222,7 @@ LOC    OBJ             LINE     SOURCE
 00000C 020000     E     201                     LJMP    ?C_START
                         202     
                         203                     END
-AX51 MACRO ASSEMBLER  SILABS_STARTUP                                                        04/22/20 23:55:46 PAGE     5
+AX51 MACRO ASSEMBLER  SILABS_STARTUP                                                        04/27/20 20:53:10 PAGE     5
 
 SYMBOL TABLE LISTING
 ------ ----- -------

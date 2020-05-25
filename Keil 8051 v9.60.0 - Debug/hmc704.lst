@@ -1,13 +1,13 @@
-C51 COMPILER V9.60.0.0   HMC704                                                            04/22/2020 23:55:47 PAGE 1   
+C51 COMPILER V9.60.0.0   HMC704                                                            04/27/2020 20:53:11 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE HMC704
 OBJECT MODULE PLACED IN .\hmc704.OBJ
-COMPILER INVOKED BY: d:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\keil_8051\9.60\BIN\C51.exe C:\Users\wrangle
-                    -r\SimplicityStudio\v4_workspace\F31x_Blinky_2\hmc704.c OMF2 SMALL DEBUG OBJECTEXTEND ROM(LARGE) WARNINGLEVEL(2) FLOATFUZ
-                    -ZY(3) OPTIMIZE(8,SPEED) INTVECTOR(0X0000) INTPROMOTE INCDIR(D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.
-                    -7//Device/shared/si8051Base;D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.7//Device/C8051F310/inc) PRINT(.
-                    -\hmc704.lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\hmc704.OBJ)
+COMPILER INVOKED BY: d:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\keil_8051\9.60\BIN\C51.exe F:\simplicity_st
+                    -udo_workspace\F31x_Blinky_2\hmc704.c OMF2 SMALL DEBUG OBJECTEXTEND ROM(LARGE) WARNINGLEVEL(2) FLOATFUZZY(3) OPTIMIZE(8,S
+                    -PEED) INTVECTOR(0X0000) INTPROMOTE INCDIR(D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.7//Device/shared/s
+                    -i8051Base;D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.7//Device/C8051F310/inc) PRINT(.\hmc704.lst) COND 
+                    -PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\hmc704.OBJ)
 
 line level    source
 
@@ -63,7 +63,7 @@ line level    source
   50   2                      CLK_1;
   51   2      
   52   2                      var = (var << 1);
-C51 COMPILER V9.60.0.0   HMC704                                                            04/22/2020 23:55:47 PAGE 2   
+C51 COMPILER V9.60.0.0   HMC704                                                            04/27/2020 20:53:11 PAGE 2   
 
   53   2              }
   54   1              CLK_0;

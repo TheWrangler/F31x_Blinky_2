@@ -1,13 +1,13 @@
-C51 COMPILER V9.60.0.0   F31X_BLINKY                                                       04/22/2020 23:55:47 PAGE 1   
+C51 COMPILER V9.60.0.0   F31X_BLINKY                                                       04/27/2020 20:53:11 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE F31X_BLINKY
 OBJECT MODULE PLACED IN .\F31x_Blinky.OBJ
-COMPILER INVOKED BY: d:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\keil_8051\9.60\BIN\C51.exe C:\Users\wrangle
-                    -r\SimplicityStudio\v4_workspace\F31x_Blinky_2\F31x_Blinky.c OMF2 SMALL DEBUG OBJECTEXTEND ROM(LARGE) WARNINGLEVEL(2) FLO
-                    -ATFUZZY(3) OPTIMIZE(8,SPEED) INTVECTOR(0X0000) INTPROMOTE INCDIR(D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/
-                    -v4.1.7//Device/shared/si8051Base;D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.7//Device/C8051F310/inc) PR
-                    -INT(.\F31x_Blinky.lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\F31x_Blinky.OBJ)
+COMPILER INVOKED BY: d:\SiliconLabs\SimplicityStudio\v4\developer\toolchains\keil_8051\9.60\BIN\C51.exe F:\simplicity_st
+                    -udo_workspace\F31x_Blinky_2\F31x_Blinky.c OMF2 SMALL DEBUG OBJECTEXTEND ROM(LARGE) WARNINGLEVEL(2) FLOATFUZZY(3) OPTIMIZ
+                    -E(8,SPEED) INTVECTOR(0X0000) INTPROMOTE INCDIR(D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.7//Device/sha
+                    -red/si8051Base;D:/SiliconLabs/SimplicityStudio/v4/developer/sdks/8051/v4.1.7//Device/C8051F310/inc) PRINT(.\F31x_Blinky.
+                    -lst) COND PAGEWIDTH(120) PAGELENGTH(65) OBJECT(.\F31x_Blinky.OBJ)
 
 line level    source
 
@@ -48,22 +48,22 @@ line level    source
   35   1              Delay();
   36   1      
   37   1              hmc704_Reset();
-*** WARNING C206 IN LINE 37 OF C:\Users\wrangler\SimplicityStudio\v4_workspace\F31x_Blinky_2\F31x_Blinky.c: 'hmc704_Rese
-             -t': missing function-prototype
+*** WARNING C206 IN LINE 37 OF F:\simplicity_studo_workspace\F31x_Blinky_2\F31x_Blinky.c: 'hmc704_Reset': missing functi
+             -on-prototype
   38   1              lmx2592_Reset();
-*** WARNING C206 IN LINE 38 OF C:\Users\wrangler\SimplicityStudio\v4_workspace\F31x_Blinky_2\F31x_Blinky.c: 'lmx2592_Res
-             -et': missing function-prototype
+*** WARNING C206 IN LINE 38 OF F:\simplicity_studo_workspace\F31x_Blinky_2\F31x_Blinky.c: 'lmx2592_Reset': missing funct
+             -ion-prototype
   39   1      
   40   1              hmc704_Config();
-*** WARNING C206 IN LINE 40 OF C:\Users\wrangler\SimplicityStudio\v4_workspace\F31x_Blinky_2\F31x_Blinky.c: 'hmc704_Conf
-             -ig': missing function-prototype
+*** WARNING C206 IN LINE 40 OF F:\simplicity_studo_workspace\F31x_Blinky_2\F31x_Blinky.c: 'hmc704_Config': missing funct
+             -ion-prototype
   41   1      
   42   1              while(1)
   43   1              {
   44   2                      lmx2592_Config();
-*** WARNING C206 IN LINE 44 OF C:\Users\wrangler\SimplicityStudio\v4_workspace\F31x_Blinky_2\F31x_Blinky.c: 'lmx2592_Con
-             -fig': missing function-prototype
-C51 COMPILER V9.60.0.0   F31X_BLINKY                                                       04/22/2020 23:55:47 PAGE 2   
+*** WARNING C206 IN LINE 44 OF F:\simplicity_studo_workspace\F31x_Blinky_2\F31x_Blinky.c: 'lmx2592_Config': missing func
+             -tion-prototype
+C51 COMPILER V9.60.0.0   F31X_BLINKY                                                       04/27/2020 20:53:11 PAGE 2   
 
   45   2              }
   46   1      }
